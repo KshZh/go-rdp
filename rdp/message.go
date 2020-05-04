@@ -20,7 +20,7 @@ type Message struct {
 	Type   MsgType // One of the message types listed above.
 	ConnID int     // Unique client-server connection ID.
 	SeqNum int     // Message sequence number.
-	Size   int     // Size of the payload.
+	// Size   int     // Size of the payload.
 	// Checksum uint16  // Message checksum.
 	Payload []byte // Data message payload.
 }
@@ -28,6 +28,7 @@ type Message struct {
 // 数据完整性校验。是否有必要？
 // 因为UDP的首部校验和会校验首部以及应用层的payload。
 // 看起来如果应用层也校验的话，似乎多此一举了。
+// 同理UDP也有报文长度字段，所以应用层消息格式就不必再包含消息长度字段了。
 
 // NewConnect returns a new connect message.
 func NewConnect() *Message {
@@ -37,12 +38,12 @@ func NewConnect() *Message {
 // NewData returns a new data message with the specified connection ID,
 // sequence number, and payload.
 // func NewData(connID, seqNum, size int, payload []byte, checksum uint16) *Message {
-func NewData(connID, seqNum, size int, payload []byte) *Message {
+func NewData(connID, seqNum int, payload []byte) *Message {
 	return &Message{
-		Type:    MsgData,
-		ConnID:  connID,
-		SeqNum:  seqNum,
-		Size:    size,
+		Type:   MsgData,
+		ConnID: connID,
+		SeqNum: seqNum,
+		// Size:    size,
 		Payload: payload,
 		// Checksum: checksum,
 	}

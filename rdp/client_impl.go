@@ -113,7 +113,7 @@ func (c *client) Write(payload []byte) error {
 	select {
 	// 让mainLoop去写c.seqNum，如果在这里写的话，而mainLoop又会去读c.seqNum，这就有竞争条件了。
 	// 而c.connID是只读的，所以可以直接读取后填充。
-	case c.writeChan <- NewData(c.connID, -1, len(payload), payload):
+	case c.writeChan <- NewData(c.connID, -1, payload):
 		return nil
 	case <-c.closed:
 		c.closed <- struct{}{}
@@ -310,8 +310,8 @@ func (c *client) mainLoop() {
 			// 转移到这里，串行写操作，这样就不必处理并发写的问题。
 			// 注意这里肯定要先放入发送队列中，而不是直接发送，这样才能受到滑动窗口的限制。
 			msg.SeqNum = c.seqNum
-			c.seqNum++
 			c.sendQueue.push(msg)
+			c.seqNum++
 			for {
 				if msg := c.sendQueue.get(); msg != nil {
 					q2.push(msg)

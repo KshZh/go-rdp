@@ -13,7 +13,6 @@ import (
 	"github.com/KshZh/go-rdp/rdpnet"
 )
 
-// TODO 把下面的map的value装进一个struct中。
 type clientInfo struct {
 	seqNum        int
 	addr          *rdpnet.UDPAddr
@@ -100,12 +99,11 @@ func (s *server) Read() (int, []byte, error) {
 }
 
 func (s *server) Write(connId int, payload []byte) error {
-	// TODO if 连接已被关闭，返回错误。
 	// 这里有一个竞争条件，也就是s.clients[connId]可能被mainLoop删掉了。
 	// s.writeChan <- NewData(connId, s.clients[connId].seqNum, len(payload), payload, uint16(ByteArray2Checksum(payload)))
 	// 所以这里先不填充seqNum，交给mainLoop去填充。
 	select {
-	case s.writeChan <- NewData(connId, -1, len(payload), payload):
+	case s.writeChan <- NewData(connId, -1, payload):
 		return nil
 	case <-s.closed:
 		s.closed <- struct{}{}
