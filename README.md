@@ -6,7 +6,7 @@ udp在ip上只是添加了基于端口的复用和分用以及差错检测功能
 
 ## 动机
 
-实现rdp的动机是在尝试学习分布式入门课程[cmu 15-440](https://www.synergylabs.org/courses/15-440/syllabus.html)时看到的作业[Project 1](https://github.com/cmu-440-f19/P1)，该project中第一步正是实现一个基于udp的应用层可靠传输协议lsp，是的，原名是lsp，即live sequence protocol，这里我把它实现了之后改名成了rdp，即reliable datagram protocol。
+在学习计算机网络TCP可靠传输原理时，恰好学习了golang的基于消息通信的并发编程模式，觉得比较新奇，所以就用这种编程模式实现了这样一个可靠传输协议，巩固学习的理论知识。rdp是基于[cmu 15-440](https://www.synergylabs.org/courses/15-440/syllabus.html)的[Project 1](https://github.com/cmu-440-f19/P1)实现的。
 
 project中只给出了rdp的接口定义、消息格式和测试用例，也就是文件client_api.go、server_api.go、rdp\[1-5\]_test.go、message.go、params.go、checksum.go，然后我自己实现了这些接口，即client_impl.go、server_impl.go、eventHeap.go、eventHeap_test.go、sortedList.go、sortedList_test.go、queue.go、queue_test.go、restrictedQueue.go、restrictedQueue_test.go。
 
